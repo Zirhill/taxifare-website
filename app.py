@@ -1,11 +1,16 @@
 import streamlit as st
-
+import pydeck as pdk
+import pandas as pd
+import numpy as np
 # '''
 # # TaxiFareModel front ::)
 # '''
+chart_data = pd.DataFrame(
+    [[ 40.7830603 , -73.9712488]],
+    columns=["lat", "lon"],
+)
 
-
-st.header(" 🗽 Taxi Fare can predict all courses in New York City... and behond !  ")
+st.header(" 🗽 Taxi Fare can predict every trip in New York City... and beyond !!  ")
 
 col01, col02, col03 =  st.columns(3)
 with col01:
@@ -16,26 +21,75 @@ with col03:
     st.write("")
 
 
-col1, col2 =  st.columns(2)
+col1, col2, col3,col4 =  st.columns(4)
 with col1:
     dateTime = st.time_input
-    st.date_input('Date input')
+    st.date_input('📆 Date input')
     st.write("------------------------")
-    st.number_input('Pick up long')
-    st.number_input('Pick up lat')
+    st.number_input('🌐 Pick up long')
+    st.number_input('🌐 Pick up lat')
 with col2:
-    st.time_input('Time entry')
+    st.time_input('⌚ Time entry ')
     st.write("------------------------")
-    st.number_input('Drop of long')
-    st.number_input('Drop of lat')
-st.write("------------------------")
-col11, col12, col13 =  st.columns(3)
-with col11:
-    st.write("")
-with col12:
+    st.number_input('📍 Drop of long')
+    st.number_input('📍 Drop of lat')
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
     st.button('Get fare 🏁')
-with col13:
-    st.write("")
+with col3:
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.number_input('Number of travellers 👨‍👨‍👧‍👦')
+with col4:
+    st.pydeck_chart(
+    pdk.Deck(
+        map_style=None,
+        initial_view_state=pdk.ViewState(
+            latitude=37.76,
+            longitude=-122.4,
+            zoom=11,
+            pitch=50,
+        ),
+        layers=[
+            pdk.Layer(
+                "HexagonLayer",
+                data=chart_data,
+                get_position="[lon, lat]",
+                radius=200,
+                elevation_scale=4,
+                elevation_range=[0, 1000],
+                pickable=True,
+                extruded=True,
+            ),
+            pdk.Layer(
+                "ScatterplotLayer",
+                data=chart_data,
+                get_position="[lon, lat]",
+                get_color="[200, 30, 0, 160]",
+                get_radius=200,
+            ),
+        ],
+    )
+)
+
+# st.write("------------------------")
+
+# col11, col12, col13 =  st.columns(3)
+# with col11:
+#     st.write("")
+# with col12:
+#     st.button('Get fare 🏁')
+# with col13:
+#     st.write("")
+
 
 
 
