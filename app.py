@@ -2,16 +2,22 @@ import streamlit as st
 import pydeck as pdk
 import pandas as pd
 import numpy as np
+import requests
+import datetime
 # '''
 # # TaxiFareModel front ::)
 # '''
+
+
 chart_data = pd.DataFrame(
     [[40.7830603 , -73.9712488]],
     columns=["lat", "lon"]
 )
 
+
 st.header(" 🗽 Taxi Fare can predict every trip in New York City... and beyond !!  ")
 
+# juste le logo
 col01, col02, col03 =  st.columns(3)
 with col01:
     st.write("")
@@ -20,43 +26,71 @@ with col02:
 with col03:
     st.write("")
 
+base_url = 'https://taxifare.lewagon.ai/predict'
 
 col1, col2, col3,col4 =  st.columns(4)
 with col1:
-    dateTime = st.time_input
-    st.date_input('📆 Date input')
-    st.write("------------------------")
-    st.number_input('🌐 Pick up long')
-    st.number_input('🌐 Pick up lat')
-with col2:
-    st.time_input('⌚ Time entry ')
-    st.write("------------------------")
-    st.number_input('📍 Drop of long')
-    st.number_input('📍 Drop of lat')
-    st.write("                        ")
-    st.write("                        ")
-    st.write("                        ")
-    st.write("                        ")
-    st.button('Get fare 🏁')
-with col3:
-    st.write("                        ")
-    st.write("                        ")
-    st.write("                        ")
-    st.write("                        ")
-    st.write("                        ")
-    st.write("                        ")
-    st.write("                        ")
-    st.write("                        ")
-    st.number_input('Number of travellers 👨‍👨‍👧‍👦')
 
-with col4:
+    pick_date = st.date_input('📆 Date input')
+
+    pickup_date = pick_date
+
+    st.write("------------------------")
+    pick_long =st.number_input('🌐 Pick up long', value=-73.9712488)
+    pick_lat = st.number_input('🌐 Pick up lat', value=40.7830603)
+with col2: #  colomne 2
+    pick_time = st.time_input('⌚ Time entry ')
+    pickup_time = pick_time
+
+        # traitement de la date et l heure
+    pickup_datetime = f'{pickup_date} {pickup_time}'
+
+    st.write("------------------------")
+    drop_long = st.number_input('📍 Drop of long', value=-73.9715)
+    drop_lat = st.number_input('📍 Drop of lat', value=40.78307)
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+
+with col3: #   slider passager
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    st.write("                        ")
+    nb_trav =  st.slider('Number of travellers 👨‍👨‍👧‍👦', min_value=1, max_value=8)
+    st.write("                        ")
+    st.write("                        ")
+
+    if st.button('Get fare 🏁'):
+        params = {"pickup_longitude": pick_long, "pickup_latitude": pick_lat, "dropoff_longitude": drop_long, "dropoff_latitude": drop_lat,"passenger_count": nb_trav, "pickup_datetime" : pickup_datetime}
+
+        response = requests.get(base_url, params=params)
+        # st.write('hello 👋')
+        # print("Réponse JSON:", response.json())
+        # st.json(response.json())
+        prediction = response.json()
+        pred = prediction['fare']
+        st.header(f'Fare amount: ${round(pred, 2)}')
+
+        # if response.status_code == 200:
+        #     print("Réponse JSON:", response.json())
+        # else:
+        #     print("Erreur:", response.status_code)
+
+
+with col4:  # La CARTE
     st.pydeck_chart(
     pdk.Deck(
         map_style=None,
         initial_view_state=pdk.ViewState(
-            latitude=40.7830603 ,
+            latitude=40.7830603 , # position de manhatan
             longitude=-73.9712488,
-            zoom=11,
+            zoom=10,
             pitch=50,
         ),
         layers=[
@@ -81,17 +115,18 @@ with col4:
     )
 )
 
-# st.write("------------------------")
 
-# col11, col12, col13 =  st.columns(3)
-# with col11:
-#     st.write("")
-# with col12:
-#     st.button('Get fare 🏁')
-# with col13:
-#     st.write("")
+col001, col002, col003 =  st.columns(3)
+with col001:
+    st.write("")
 
 
+
+
+with col002:  # cela sert juste a aligner a gauche
+    st.write("")
+with col003:
+    st.write("")
 
 
 
