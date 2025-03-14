@@ -6,8 +6,8 @@ import numpy as np
 # # TaxiFareModel front ::)
 # '''
 chart_data = pd.DataFrame(
-    [[ 40.7830603 , -73.9712488]],
-    columns=["lat", "lon"],
+    [[40.7830603 , -73.9712488]],
+    columns=["lat", "lon"]
 )
 
 st.header(" 🗽 Taxi Fare can predict every trip in New York City... and beyond !!  ")
@@ -48,13 +48,14 @@ with col3:
     st.write("                        ")
     st.write("                        ")
     st.number_input('Number of travellers 👨‍👨‍👧‍👦')
+
 with col4:
     st.pydeck_chart(
     pdk.Deck(
         map_style=None,
         initial_view_state=pdk.ViewState(
-            latitude=37.76,
-            longitude=-122.4,
+            latitude=40.7830603 ,
+            longitude=-73.9712488,
             zoom=11,
             pitch=50,
         ),
